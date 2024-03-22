@@ -4,7 +4,7 @@ import Header from './Header'
 import ChatArea from './ChatArea'
 import Footer from './Footer'
 
-const ChatBox = ({ roomData, handleMessageSend, allMsg, user }) => {
+const ChatBox = ({ roomData, handleMessageSend, allMsg, user, handleDelete }) => {
     return (
         <Box sx={{ width: "50vw", display: "flex", flexDirection: "column", height: "100%" }}>
 
@@ -13,7 +13,7 @@ const ChatBox = ({ roomData, handleMessageSend, allMsg, user }) => {
                     (
                         <>
                             <Header roomData={roomData} />
-                            <ChatArea allMsg={allMsg} user={user} />
+                            <ChatArea allMsg={allMsg} user={user} handleDelete={handleDelete} />
                             <Footer handleMessageSend={handleMessageSend} />
                         </>
                     )

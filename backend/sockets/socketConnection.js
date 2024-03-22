@@ -36,10 +36,13 @@ const socketInitialize = (server) => {
             addUser(user, socket.id);
             io.emit("USER_ADDED", onlineUsers);
         });
-        socket.on("SEND_MSG", (msg) => {
+        socket.on("SEND_MSG", async (msg) => {
             console.log(msg.msg, "MSG FROM FRONTEND");
-            saveMessage(msg)
-            // socket.to(msg.receiver.socketId).emit("RECEIVE_MSG", msg);
+            await saveMessage(msg)
+            socket.to(msg.receiver.socketId).emit("RECEIVE_MSG", saveMessage);
+        });
+        socket.on("DELETED_MSG", (msg) => {
+            socket.to(msg.receiver.socketId).emit("DELETED_MSG", msg)
         });
         socket.on("disconnect", () => {
             removeUser(socket.id);

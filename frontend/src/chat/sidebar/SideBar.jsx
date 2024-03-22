@@ -3,8 +3,9 @@ import Header from "./Header"
 import { Fragment, useState } from "react"
 import PersonIcon from '@mui/icons-material/Person'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
+import axios from 'axios'
 
-const SideBar = ({ user, onlineUsers, roomData, setRoomData }) => {
+const SideBar = ({ user, onlineUsers, roomData, setRoomData, setAllMsg }) => {
     console.log(onlineUsers, "Online users");
     const [value, setValue] = useState(0);
 
@@ -18,7 +19,14 @@ const SideBar = ({ user, onlineUsers, roomData, setRoomData }) => {
             ...roomData,
             room: "test",
             receiver: user
+        });
+        axios.get(`http://localhost:8000/message/${user._id}`).then((response) => {
+            console.log(response);
+            setAllMsg(response.data.data);
         })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     return (

@@ -2,8 +2,12 @@ import ReplyIcon from '@mui/icons-material/Reply'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 
 import { Avatar, Box, Chip, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Stack, Typography } from '@mui/material'
+import axios from 'axios'
 
-const ChatArea = ({ allMsg, user }) => {
+const ChatArea = ({ allMsg, user, handleDelete }) => {
+
+
+
     return (
         <Box sx={{ flex: "1 0 0", overflowY: "auto", background: "#f9f9f9" }}>
 
@@ -29,7 +33,7 @@ const ChatArea = ({ allMsg, user }) => {
                                             <IconButton size='small'>
                                                 <ReplyIcon fontSize='small' />
                                             </IconButton>
-                                            <IconButton size='small' color='error'>
+                                            <IconButton size='small' color='error' onClick={() => handleDelete(item._id)}>
                                                 <DeleteOutlineIcon fontSize='small' />
                                             </IconButton>
                                         </Box>

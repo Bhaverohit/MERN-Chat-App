@@ -5,6 +5,7 @@ import UserProfile from './profile/UserProfile'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import io from 'socket.io-client'
+import axios from 'axios'
 const PATH = "http://localhost:8000";
 
 
@@ -42,6 +43,11 @@ const ChatComponent = () => {
                 setAllMsg((prevState) => [...prevState, data])
             });
 
+            socketRef.current.on("DELETED_MSG", (data) => {
+                console.log(data, "MSG deleted by user");
+                setAllMsg((prevState) => prevState.filter((item) => item._id !== data.msg._id));
+            });
+
             return () => socketRef.current.disconnect();
         }
     }, [isSocketConnected]);
@@ -53,7 +59,7 @@ const ChatComponent = () => {
             const data = {
                 msg,
                 receiver: roomData.receiver,
-                sender: state
+                sender: state,
             }
             socketRef.current.emit("SEND_MSG", data);
             setAllMsg((prevState) => [...prevState, data])
@@ -61,13 +67,33 @@ const ChatComponent = () => {
     }
 
 
+    const handleDelete = (id) => {
+        axios.delete(`http://localhost:8000/message/${id}`).then((response) => {
+            console.log(response);
+
+            if (socketRef.current.connected) {
+                const data = {
+                    msg: response.data.data,
+                    receiver: roomData.receiver
+                }
+                socketRef.current.emit("DELETED_MSG", data);
+                setAllMsg((prevState) => prevState.filter((data) => data._id !== response.data.data._id)
+                );
+            }
+
+        })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
 
     if (!state) return null;
 
     return (
         <Paper square elevation={0} sx={{ height: "100vh", display: "flex" }}>
-            <SideBar user={state} onlineUsers={onlineUsers} setRoomData={setRoomData} roomData={roomData} />
-            <ChatBox roomData={roomData} user={state} handleMessageSend={handleMessageSend} allMsg={allMsg} />
+            <SideBar user={state} onlineUsers={onlineUsers} setRoomData={setRoomData} roomData={roomData} setAllMsg={setAllMsg} />
+            <ChatBox roomData={roomData} user={state} handleMessageSend={handleMessageSend} allMsg={allMsg} handleDelete={handleDelete} />
             <UserProfile user={state} />
         </Paper>
 

@@ -17,7 +17,7 @@ const Footer = ({ handleMessageSend, replyMessage, setReplyMessage }) => {
         if (msg) {
             handleMessageSend(msg)
         }
-        setMsg(msg)
+        setMsg("")
     }
 
     return (

@@ -8,11 +8,11 @@ exports.saveMessage = async (data) => {
         const saveMsg = new Message(data);
         await saveMsg.save();
 
-        // return message;
+        return saveMsg;
 
     } catch (error) {
         console.log(error);
-        // return new Error(error.message);
+        return error.message;
     }
 }
 
@@ -30,7 +30,7 @@ exports.getMessages = async (req, res) => {
         }
 
         const allMessages = await Message.find({
-            $or: [{ "sender._id": id }, { "receiver._id": id }]
+            $or: [{ "sender._id": id }, { "receiver._id": id }],
         })
 
         return res.status(200).json({

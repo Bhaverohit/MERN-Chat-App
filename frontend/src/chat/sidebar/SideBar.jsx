@@ -6,7 +6,6 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import axios from 'axios'
 
 const SideBar = ({ user, onlineUsers, roomData, setRoomData, setAllMsg }) => {
-    console.log(onlineUsers, "Online users");
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
@@ -21,8 +20,8 @@ const SideBar = ({ user, onlineUsers, roomData, setRoomData, setAllMsg }) => {
             receiver: user
         });
         axios.get(`http://localhost:8000/message/${user._id}`).then((response) => {
-            console.log(response);
             setAllMsg(response.data.data);
+            console.log("SETALLMSG", response.data.data);
         })
             .catch((err) => {
                 console.log(err);
@@ -43,7 +42,6 @@ const SideBar = ({ user, onlineUsers, roomData, setRoomData, setAllMsg }) => {
 
             {value === 0 && (
                 <List sx={{ p: 0, overflowY: "auto", flex: "1 0 0" }}>
-                    {console.log(onlineUsers, "Online Users Sidebar")}
                     {
                         onlineUsers.filter((ele) => ele._id !== user._id)
                             .map((item) => (

@@ -39,13 +39,11 @@ const ChatComponent = () => {
             });
 
             socketRef.current.on("RECEIVE_MSG", (data) => {
-                console.log(data, "From another user");
                 setAllMsg((prevState) => [...prevState, data])
             });
 
             socketRef.current.on("DELETED_MSG", (data) => {
-                console.log(data, "MSG deleted by user");
-                setAllMsg((prevState) => prevState.filter((item) => item._id !== data.msg._id));
+                setAllMsg((prevState) => prevState.filter((item) => item._id != data.msg._id));
             });
 
             return () => socketRef.current.disconnect();
@@ -53,23 +51,23 @@ const ChatComponent = () => {
     }, [isSocketConnected]);
 
     const handleMessageSend = (msg) => {
-        console.log(allMsg, "ALL MESGGSE CHAT COMPO");
         // console.log(socketRef.current, "SOCKET");
+        let sender = state;
+        sender.socketId = socketRef.current.id;
         if (socketRef.current.connected) {
             const data = {
                 msg,
                 receiver: roomData.receiver,
-                sender: state,
+                sender,
             }
             socketRef.current.emit("SEND_MSG", data);
-            setAllMsg((prevState) => [...prevState, data])
+            // setAllMsg((prevState) => [...prevState, data])
         }
     }
 
 
     const handleDelete = (id) => {
         axios.delete(`http://localhost:8000/message/${id}`).then((response) => {
-            console.log(response);
 
             if (socketRef.current.connected) {
                 const data = {
@@ -77,7 +75,7 @@ const ChatComponent = () => {
                     receiver: roomData.receiver
                 }
                 socketRef.current.emit("DELETED_MSG", data);
-                setAllMsg((prevState) => prevState.filter((data) => data._id !== response.data.data._id)
+                setAllMsg((prevState) => prevState.filter((data) => data._id != response.data.data._id)
                 );
             }
 

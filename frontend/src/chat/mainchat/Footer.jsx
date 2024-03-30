@@ -7,12 +7,10 @@ const Footer = ({ handleMessageSend }) => {
     const [msg, setMsg] = useState("");
 
     const handleChange = (e) => {
-        console.log(e.target.value, "handleChange");
         setMsg(e.target.value);
     }
 
     const handleSubmit = (e) => {
-        console.log(msg, "Default Submit");
         e.preventDefault();
 
         if (msg) {

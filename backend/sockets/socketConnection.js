@@ -38,8 +38,10 @@ const socketInitialize = (server) => {
         });
         socket.on("SEND_MSG", async (msg) => {
             console.log(msg.msg, "MSG FROM FRONTEND");
-            await saveMessage(msg)
-            socket.to(msg.receiver.socketId).emit("RECEIVE_MSG", saveMessage);
+            const isSaved = await saveMessage(msg)
+            io.to(msg.receiver.socketId)
+                .to(msg.sender.socketId)
+                .emit("RECEIVE_MSG", isSaved);
         });
         socket.on("DELETED_MSG", (msg) => {
             socket.to(msg.receiver.socketId).emit("DELETED_MSG", msg)

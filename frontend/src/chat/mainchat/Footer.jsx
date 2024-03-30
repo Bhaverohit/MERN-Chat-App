@@ -1,8 +1,9 @@
-import { Box, Button, TextField } from '@mui/material'
+import { Box, Button, IconButton, TextField, Typography } from '@mui/material'
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon"
+import CloseIcon from "@mui/icons-material/Close"
 import { useState } from 'react'
 
-const Footer = ({ handleMessageSend }) => {
+const Footer = ({ handleMessageSend, replyMessage, setReplyMessage }) => {
 
     const [msg, setMsg] = useState("");
 
@@ -20,7 +21,16 @@ const Footer = ({ handleMessageSend }) => {
     }
 
     return (
-        <Box sx={{ p: 1, display: "flex", }}>
+        <Box sx={{ p: 1, display: "flex", position: "relative" }}>
+            {replyMessage && (
+                <Box sx={{ position: "absolute", left: 0, right: 0, bottom: "57px", background: "#ddd", p: 1, borderLeft: "4px solid", borderColor: "primary.light" }}>
+                    <Typography>{replyMessage.sender.name}</Typography>
+                    <Typography variant='caption'>{replyMessage.msg}</Typography>
+                    <IconButton aria-label='close' sx={{ position: "absolute", right: 0, top: 0 }} onClick={() => setReplyMessage(null)}>
+                        <CloseIcon />
+                    </IconButton>
+                </Box>
+            )}
             <Box sx={{ display: "flex", alignItems: "center" }}>
 
                 <Button sx={{ minWidth: "auto", mr: 1 }}>

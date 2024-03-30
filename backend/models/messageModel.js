@@ -35,6 +35,9 @@ const messageSchema = new mongoose.Schema({
             required: true
         },
     },
+    replyMessage: {
+
+    },
 
 },
     { timestamps: true });

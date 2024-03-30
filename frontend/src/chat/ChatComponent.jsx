@@ -15,6 +15,7 @@ const ChatComponent = () => {
     const [isSocketConnected, setIsSocketConnected] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [allMsg, setAllMsg] = useState([]);
+    const [replyMessage, setReplyMessage] = useState(null);
     const [roomData, setRoomData] = useState({ room: null, receiver: null });
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -60,7 +61,11 @@ const ChatComponent = () => {
                 receiver: roomData.receiver,
                 sender,
             }
+            if (replyMessage) {
+                data.replyMessage = replyMessage;
+            }
             socketRef.current.emit("SEND_MSG", data);
+            setReplyMessage(null);
             // setAllMsg((prevState) => [...prevState, data])
         }
     }
@@ -91,7 +96,7 @@ const ChatComponent = () => {
     return (
         <Paper square elevation={0} sx={{ height: "100vh", display: "flex" }}>
             <SideBar user={state} onlineUsers={onlineUsers} setRoomData={setRoomData} roomData={roomData} setAllMsg={setAllMsg} />
-            <ChatBox roomData={roomData} user={state} handleMessageSend={handleMessageSend} allMsg={allMsg} handleDelete={handleDelete} />
+            <ChatBox roomData={roomData} user={state} handleMessageSend={handleMessageSend} allMsg={allMsg} handleDelete={handleDelete} setReplyMessage={setReplyMessage} replyMessage={replyMessage} />
             <UserProfile user={state} />
         </Paper>
 
